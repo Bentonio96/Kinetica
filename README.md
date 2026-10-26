@@ -204,6 +204,10 @@ Lighthouse 12 against `vite preview` (no compression; Vercel adds it):
 
 Mobile: LCP 2.7 s, TBT 0 ms, CLS 0.01.
 
+Against the live deploy (https://kinetica-fest.vercel.app, 2026-10-25):
+desktop 100/100/100/100, mobile 89/100/100/100 (LCP 2.7 s, TBT 0 ms, CLS 0),
+and axe still at 0 violations in all seven builds.
+
 ![Phone](docs/08-movil.jpg)
 ![Phone, line-up](docs/09-movil-lineup.jpg)
 
