@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#F3F1EC" />
+    <meta name="color-scheme" content="light" />
+
+    <title>Kinetica — Festival de arte, luz, sonido y movimiento</title>
+    <meta
+      name="description"
+      content="Kinetica, un festival ficticio de arte, luz, sonido y movimiento: cuatro días, doce artistas, cuatro instalaciones y un arsenal portuario convertido en escenario. Pieza de portafolio."
+    />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="canonical" href="https://kinetica.vercel.app/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Kinetica — Festival de arte, luz, sonido y movimiento" />
+    <meta
+      property="og:description"
+      content="18—21 de marzo de 2027. Doce artistas, cuatro instalaciones y un arsenal portuario convertido en escenario. Un festival ficticio."
+    />
+    <meta property="og:image" content="https://kinetica.vercel.app/og.jpg" />
+    <meta property="og:url" content="https://kinetica.vercel.app/" />
+    <meta property="og:locale" content="es_CL" />
+    <meta property="og:locale:alternate" content="en_GB" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script>
+      // ?reduced=1 must stop the CSS entrance too, before first paint.
+      if (/[?&]reduced=(1|true)/.test(location.search))
+        document.documentElement.dataset.reduced = ''
+    </script>
+  </head>
+  <body class="grano">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
