@@ -1,0 +1,414 @@
+@import 'tailwindcss';
+
+/*
+ * «Espectro». A light ground where every colour comes from light itself:
+ * the iridescent orb, the foil on the tickets, the art of the line-up. The
+ * interface stays ink on paper, with one accent (`voltaje`) reserved for what
+ * you can touch. The night sections flip the whole page to `noche`.
+ *
+ * Components never use the raw palette: they use the scene roles below
+ * (`fondo`, `tinta`, `tenue`, `linea`, `acento`), which the night scene
+ * redefines.
+ */
+@theme {
+  --color-papel: #f3f1ec;
+  --color-tinta-papel: #141217;
+  --color-grafito: #57525e;
+  --color-hilo: #d5d0c7;
+  --color-voltaje: #3a2ae0;
+
+  --color-noche: #100f14;
+  --color-nieve: #f1eff4;
+  --color-humo: #b3aebd;
+  --color-ceniza: #36333d;
+  --color-lila: #ab9fff;
+
+  --font-display:
+    'Bricolage Grotesque Variable', 'Bricolage Respaldo', sans-serif;
+  --font-sans:
+    'Inter Tight Variable', 'Inter Tight Respaldo', ui-sans-serif, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --ease-salida: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/*
+ * Metric-matched fallbacks: Arial scaled to the average advance of each web
+ * font (measured on the hero copy), so text wraps the same before and after
+ * the swap and the hero does not jump (it was a 0.2 CLS on phones).
+ */
+@font-face {
+  font-family: 'Inter Tight Respaldo';
+  src: local('Arial'), local('Helvetica'), local('Roboto');
+  size-adjust: 95.1%;
+}
+
+@font-face {
+  font-family: 'Bricolage Respaldo';
+  src: local('Arial'), local('Helvetica'), local('Roboto');
+  size-adjust: 90.6%;
+}
+
+@theme inline {
+  --color-fondo: var(--fondo);
+  --color-tinta: var(--tinta);
+  --color-tenue: var(--tenue);
+  --color-linea: var(--linea);
+  --color-acento: var(--acento);
+}
+
+:root {
+  --fondo: var(--color-papel);
+  --tinta: var(--color-tinta-papel);
+  --tenue: var(--color-grafito);
+  --linea: var(--color-hilo);
+  --acento: var(--color-voltaje);
+  color-scheme: light;
+  /* Real height of the visible viewport on phones; set by JS, svh fallback. */
+  --alto: 100svh;
+}
+
+/*
+ * The night scene. Without JS or under reduced motion, each night section
+ * paints itself. With motion, the whole page flips instead (html[data-flip]),
+ * so the change reads as the lights going down rather than a hard band.
+ */
+.escena-noche,
+html[data-escena='noche'] {
+  --fondo: var(--color-noche);
+  --tinta: var(--color-nieve);
+  --tenue: var(--color-humo);
+  --linea: var(--color-ceniza);
+  --acento: var(--color-lila);
+}
+
+.escena-noche {
+  background-color: var(--fondo);
+  color: var(--tinta);
+}
+
+html[data-flip] .escena-noche {
+  background-color: transparent;
+}
+
+html[data-flip]:not([data-escena='noche']) .escena-noche {
+  --fondo: var(--color-papel);
+  --tinta: var(--color-tinta-papel);
+  --tenue: var(--color-grafito);
+  --linea: var(--color-hilo);
+  --acento: var(--color-voltaje);
+}
+
+html {
+  background-color: var(--fondo);
+  transition: background-color 700ms var(--ease-salida);
+}
+
+html[data-reduced],
+html[data-reduced] * {
+  transition: none !important;
+}
+
+body {
+  background-color: var(--fondo);
+  color: var(--tinta);
+  font-family: var(--font-sans);
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+  transition:
+    background-color 700ms var(--ease-salida),
+    color 700ms var(--ease-salida);
+}
+
+::selection {
+  background: var(--acento);
+  color: var(--fondo);
+}
+
+:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Paper grain: the flat ink should not read as a switched-off screen. */
+.grano::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---- Type roles -------------------------------------------------------- */
+
+/*
+ * Display type. Line-height stays above 0.9 and every display block keeps
+ * a little padding, so ascenders, accents (Á, É) and descenders never touch
+ * a clipping edge, the lesson from Cordillera.
+ */
+.display {
+  font-family: var(--font-display);
+  font-variation-settings:
+    'wght' 640,
+    'wdth' 82,
+    'opsz' 96;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  padding-block: 0.06em;
+}
+
+.titulo {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 1.6rem + 3.6vw, 5.6rem);
+  font-variation-settings:
+    'wght' 560,
+    'wdth' 84,
+    'opsz' 96;
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  padding-block: 0.08em;
+  text-wrap: balance;
+}
+
+.etiqueta {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+.cifra {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.prosa {
+  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+/* ---- Hero entrance: pure CSS, so it runs before any JS ------------------ */
+
+@keyframes subir {
+  from {
+    transform: translateY(0.5em) rotate(4deg);
+  }
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+  }
+}
+
+.entrada > * {
+  animation: subir 1100ms var(--ease-salida) both;
+  animation-delay: calc(var(--i, 0) * 70ms + 150ms);
+}
+
+.entrada-suave {
+  animation: aparecer 1400ms var(--ease-salida) 500ms both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .entrada > *,
+  .entrada-suave {
+    animation: none;
+  }
+}
+
+html[data-reduced] .entrada > *,
+html[data-reduced] .entrada-suave {
+  animation: none;
+}
+
+/* ---- Marquee ----------------------------------------------------------- */
+
+.cinta {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+/* ---- Holographic foil (tickets) ---------------------------------------- */
+
+.foil {
+  --mx: 50%;
+  --my: 50%;
+  --giro: 0deg;
+  background:
+    radial-gradient(
+      circle at var(--mx) var(--my),
+      rgb(255 255 255 / 0.55),
+      transparent 42%
+    ),
+    conic-gradient(
+      from var(--giro) at var(--mx) var(--my),
+      #ff9ac8,
+      #ffd59a,
+      #b9f5c9,
+      #92e3ff,
+      #b7a8ff,
+      #ff9ac8
+    );
+}
+
+/* ---- FAQ --------------------------------------------------------------- */
+
+.pregunta::details-content {
+  block-size: 0;
+  overflow-y: clip;
+  transition:
+    block-size 450ms var(--ease-salida),
+    content-visibility 450ms allow-discrete;
+}
+
+.pregunta[open]::details-content {
+  block-size: auto;
+}
+
+:root {
+  interpolate-size: allow-keywords;
+}
+
+.pregunta summary::-webkit-details-marker {
+  display: none;
+}
+
+/* ---- Custom cursor ----------------------------------------------------- */
+
+html[data-cursor] body,
+html[data-cursor] a,
+html[data-cursor] button,
+html[data-cursor] summary,
+html[data-cursor] [role='button'] {
+  cursor: none;
+}
+
+/* ---- Mobile menu dialog ------------------------------------------------ */
+
+dialog::backdrop {
+  background: rgb(16 15 20 / 0.5);
+}
+
+/* ---- Installation pieces ----------------------------------------------- */
+
+@keyframes pendulo {
+  from {
+    transform: rotate(-24deg);
+  }
+  to {
+    transform: rotate(24deg);
+  }
+}
+
+@keyframes eco {
+  from {
+    transform: scale(0.05);
+    opacity: 1;
+  }
+  to {
+    transform: scale(1.1);
+    opacity: 0;
+  }
+}
+
+@keyframes ola {
+  to {
+    transform: translateX(-240px);
+  }
+}
+
+@keyframes espejo {
+  from {
+    transform: rotateY(-35deg);
+  }
+  to {
+    transform: rotateY(35deg);
+  }
+}
+
+.pendulo {
+  animation: pendulo 1s ease-in-out infinite alternate;
+}
+
+.eco {
+  transform-origin: 120px 80px;
+  animation: eco 4.2s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
+}
+
+.ola {
+  animation: ola 8s linear infinite;
+}
+
+.espejo {
+  animation: espejo 2.4s ease-in-out infinite alternate;
+}
+
+/* A mirror the pointer is steering stops waving. */
+.espejo[style*='rotateX'] {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pendulo,
+  .eco,
+  .ola,
+  .espejo {
+    animation: none;
+  }
+}
+
+html[data-reduced] :is(.pendulo, .eco, .ola, .espejo) {
+  animation: none;
+}
+
+/* ---- Venue map --------------------------------------------------------- */
+
+@keyframes ruta {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -110;
+  }
+}
+
+@keyframes pulso {
+  from {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  to {
+    transform: scale(3.2);
+    opacity: 0;
+  }
+}
+
+.ruta {
+  animation: ruta 3s linear infinite;
+}
+
+.pulso {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pulso 1.8s var(--ease-salida) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ruta,
+  .pulso {
+    animation: none;
+  }
+}
+
+html[data-reduced] :is(.ruta, .pulso) {
+  animation: none;
+}
