@@ -235,7 +235,9 @@ output folder and a query second and third, e.g.
 
 ### Deploying
 
-Live at **https://kinetica.vercel.app**. `vercel.json` sets the Vite preset,
+Live at **https://kinetica-fest.vercel.app** (`kinetica.vercel.app` was
+already taken by another account). The Vercel project `kinetica` is connected
+to this repository, so every push to `main` deploys to production. `vercel.json` sets the Vite preset,
 `dist` and a year of cache for hashed assets. No environment variables, no
 runtime.
 

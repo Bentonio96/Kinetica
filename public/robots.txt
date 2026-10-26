@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://kinetica.vercel.app/sitemap.xml
+Sitemap: https://kinetica-fest.vercel.app/sitemap.xml
